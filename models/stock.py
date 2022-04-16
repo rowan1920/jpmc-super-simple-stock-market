@@ -51,3 +51,12 @@ class Stock(BaseModel):
         if v <= 0:
             raise ValueError('Stock par_value must be greater than zero')
         return v
+
+    def calculate_dividend_yield(self, price: int) -> float:
+        try:
+            if self.type == 'preferred':
+                return (self.fixed_dividend * self.par_value) / price
+            else:
+                return self.last_dividend  / price
+        except ZeroDivisionError:
+            return 0
