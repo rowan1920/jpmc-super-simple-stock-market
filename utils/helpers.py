@@ -43,6 +43,23 @@ def calculate_volume_weighted_stock_price(stock_symbol: str) -> float:
     return to_return
 
 
+def calculate_gbce_all_share_index() -> float:
+    if len(global_variables.trades) < 1:
+        raise ValueError('There must be more than zero trades to calculate the GBCE All Share Index')
+    total_trade_quantity: float = 0
+    total_trade_value: float = 1
+
+    for trade in global_variables.trades:
+        total_trade_quantity += trade.quantity
+        total_trade_value = total_trade_value * pow(trade.traded_price, trade.quantity)
+    try:
+        to_return = total_trade_value**(1/total_trade_quantity)
+    except ZeroDivisionError:
+        to_return = 0
+
+    return to_return
+
+
 def hydrate_stocks(data) -> Dict[str, Stock]:
     hydrated_stocks: Dict[str, Stock] = {}
     for stock_data in data:
